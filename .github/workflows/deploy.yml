@@ -31,7 +31,7 @@ jobs:
       run: ls
 
     - name: Install Terraform
-      run: bash .github/scripts/install_terraform.sh
+      run: bash "${{ vars.GITHUB_WORKSPACE }}/.github/scripts/install_terraform.sh" 
 
     - name: Terraform Fmt
       run: terraform fmt -check

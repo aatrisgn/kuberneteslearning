@@ -37,9 +37,3 @@ variable "environment" {
     error_message = "Only DEV, TST, STA and PRD is allowed values."
   }
 }
-
-variable "subscription_id" {
-  description = "ID of subscription"
-  type        = string
-  nullable    = false
-}

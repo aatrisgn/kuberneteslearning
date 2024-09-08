@@ -44,8 +44,11 @@ jobs:
         -backend-config=key="k8cluster.dev.tfstate"
         
     - name: Terraform Validate
-      run: terraform validate -no-color
+      run: terraform validate
 
     - name: Terraform Plan
       id: plan
-      run: terraform plan -no-color -input=false -var-file="envs/dev/vars.dev.tfvars"
+      run: terraform plan -input=false -var-file="envs/dev/vars.dev.tfvars" -out=tfplan
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan

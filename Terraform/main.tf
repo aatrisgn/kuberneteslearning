@@ -1,7 +1,7 @@
 # Configure the Azure provider
 terraform {
   #Will automatically be provided during deployment via -backend-config arguments
-  required_version = ">= 1.9.1"
+  required_version = ">= 1.9.5"
 
   backend "azurerm" {
     use_azuread_auth = true
@@ -11,7 +11,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.x"
+      version = "4.0"
     }
   }
 }

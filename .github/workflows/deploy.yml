@@ -27,6 +27,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: view dir
+      run: ls
+
     - name: Install Terraform
       run: bash .github/scripts/install_terraform.sh
 

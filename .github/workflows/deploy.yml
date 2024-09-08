@@ -15,6 +15,7 @@ permissions:
 jobs:
   build_job:
     runs-on: ubuntu-latest
+    environment: production #Should be changed, lol
     defaults:
       run:
         working-directory: ./Terraform

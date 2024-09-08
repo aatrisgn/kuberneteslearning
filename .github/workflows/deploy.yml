@@ -27,11 +27,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Azure Login
-      uses: azure/login@v2
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
     - name: Install Terraform
       run: bash .github/scripts/install_terraform.sh
 

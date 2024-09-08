@@ -3,7 +3,7 @@ variable "primary_location" {
   type        = string
   nullable    = false
   validation {
-    condition     = var.location == "westeurope" || var.location == "northeurope"
+    condition     = var.primary_location == "westeurope" || var.primary_location == "northeurope"
     error_message = "Only 'westeurope' and 'northeurope' is allowed values."
   }
 }
@@ -13,7 +13,7 @@ variable "secondary_location" {
   type        = string
   nullable    = false
   validation {
-    condition     = var.location == "westeurope" || var.location == "northeurope"
+    condition     = var.secondary_location == "westeurope" || var.secondary_location == "northeurope"
     error_message = "Only 'westeurope' and 'northeurope' is allowed values."
   }
 }
@@ -23,7 +23,7 @@ variable "tertiary_location" {
   type        = string
   nullable    = true
   validation {
-    condition     = var.location == "westeurope" || var.location == "northeurope"
+    condition     = var.tertiary_location == "westeurope" || var.tertiary_location == "northeurope"
     error_message = "Only 'westeurope' and 'northeurope' is allowed values."
   }
 }

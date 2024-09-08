@@ -21,7 +21,8 @@ variable "secondary_location" {
 variable "tertiary_location" {
   description = "Default region for provider"
   type        = string
-  nullable    = true
+  nullable    = false
+  default     = "N/A"
   validation {
     condition     = var.tertiary_location == "westeurope" || var.tertiary_location == "northeurope"
     error_message = "Only 'westeurope' and 'northeurope' is allowed values."

@@ -5,13 +5,13 @@ terraform {
 
   backend "azurerm" {
     use_azuread_auth = true
-    use_oidc = true
+    use_oidc         = true
   }
 
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.111.0"  
+      version = "~> 3.111.0"
     }
   }
 }
@@ -36,7 +36,7 @@ resource "azurerm_virtual_network" "primary_vnet" {
   location            = azurerm_resource_group.primary_rg.location
   resource_group_name = azurerm_resource_group.primary_rg.name
   address_space       = ["10.10.0.0/16"]
-  
+
 
   subnet {
     name             = "controller"

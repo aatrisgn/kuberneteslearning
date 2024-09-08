@@ -35,15 +35,15 @@ jobs:
 
     - name: Terraform Init
       run: |
-        terraform init \
-        -backend-config="resource_group_name=${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME_DEV }}" \
-        -backend-config="storage_account_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME_DEV }}" \
-        -backend-config="container_name=${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME_DEV }}"
-        -backend-config="key=k8cluster.dev.tfstate"
+        terraform init -reconfigure \
+        -backend-config=resource_group_name="${{ secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME_DEV }}" \
+        -backend-config=storage_account_name="${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME_DEV }}" \
+        -backend-config=container_name="${{ secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME_DEV }}"
+        -backend-config=key="k8cluster.dev.tfstate"
         
     - name: Terraform Validate
       run: terraform validate -no-color
 
     - name: Terraform Plan
       id: plan
-      run: terraform plan -no-color -input=false -var-file "envs/dev/vars.dev.tfvars"
+      run: terraform plan -no-color -input=false -var-file="envs/dev/vars.dev.tfvars"

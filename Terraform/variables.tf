@@ -24,7 +24,7 @@ variable "tertiary_location" {
   nullable    = false
   default     = "N/A"
   validation {
-    condition     = var.tertiary_location == "westeurope" || var.tertiary_location == "northeurope"
+    condition     = var.tertiary_location == "N/A" || var.tertiary_location == "westeurope" || var.tertiary_location == "northeurope"
     error_message = "Only 'westeurope' and 'northeurope' is allowed values."
   }
 }

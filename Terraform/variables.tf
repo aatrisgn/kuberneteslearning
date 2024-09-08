@@ -31,7 +31,7 @@ variable "tertiary_location" {
 variable "environment" {
   description = "Environment name"
   type        = string
-  nullable    = false
+  nullable    = true
   validation {
     condition     = var.environment == "dev" || var.environment == "tst" || var.environment == "sta" || var.environment == "prd"
     error_message = "Only DEV, TST, STA and PRD is allowed values."

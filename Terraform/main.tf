@@ -79,3 +79,18 @@ resource "azurerm_virtual_network_peering" "peer_secondary_to_primary" {
   virtual_network_name      = azurerm_virtual_network.secondary_vnet.name
   remote_virtual_network_id = azurerm_virtual_network.primary_vnet.id
 }
+
+# Create public IPs
+resource "azurerm_public_ip" "primary_public_ip" {
+  name                = "pip-ath-aks-${lower(var.environment)}-${lower(var.primary_location)}"
+  location            = azurerm_resource_group.primary_location.location
+  resource_group_name = azurerm_resource_group.primary_location.name
+  allocation_method   = "Dynamic"
+}
+# Create public IPs
+resource "azurerm_public_ip" "secondary_public_ip" {
+  name                = "pip-ath-aks-${lower(var.environment)}-${lower(var.secondary_location)}"
+  location            = azurerm_resource_group.secondary_rg.location
+  resource_group_name = azurerm_resource_group.secondary_rg.name
+  allocation_method   = "Dynamic"
+}

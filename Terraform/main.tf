@@ -96,12 +96,12 @@ resource "azurerm_public_ip" "secondary_public_ip" {
 }
 
 module "ssh_primary" {
-  source = "./modules/ssh"
+  source              = "./modules/ssh"
   resource_group_name = azurerm_resource_group.primary_rg.name
 }
 
 module "ssh_secondary" {
-  source = "./modules/ssh"
+  source              = "./modules/ssh"
   resource_group_name = azurerm_resource_group.secondary_rg.name
 }
 

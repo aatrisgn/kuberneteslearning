@@ -85,14 +85,14 @@ resource "azurerm_public_ip" "primary_public_ip" {
   name                = "pip-ath-aks-${lower(var.environment)}-${lower(var.primary_location)}"
   location            = azurerm_resource_group.primary_rg.location
   resource_group_name = azurerm_resource_group.primary_rg.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 # Create public IPs
 resource "azurerm_public_ip" "secondary_public_ip" {
   name                = "pip-ath-aks-${lower(var.environment)}-${lower(var.secondary_location)}"
   location            = azurerm_resource_group.secondary_rg.location
   resource_group_name = azurerm_resource_group.secondary_rg.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 module "ssh_primary" {

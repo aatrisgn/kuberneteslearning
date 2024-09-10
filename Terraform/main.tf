@@ -116,17 +116,19 @@ module "primary_controller_linux_vm" {
   vm_name              = "01"
   subnet_name          = local.controller_subnet_name
   resource_group_name  = azurerm_resource_group.primary_rg.name
+  depends_on = [ azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet ]
 }
 
 module "secondary_controller_linux_vm" {
   source               = "./modules/linux_vm"
   component_name       = "ath-aks"
   public_ssh_key       = module.ssh_secondary.key_data
-  virtual_network_name = azurerm_virtual_network.primary_vnet.name
+  virtual_network_name = azurerm_virtual_network.secondary_vnet.name
   location             = var.primary_location
   username             = "aatrisgn"
   environment          = var.environment
   vm_name              = "01"
   subnet_name          = local.controller_subnet_name
-  resource_group_name  = azurerm_resource_group.primary_rg.name
+  resource_group_name  = azurerm_resource_group.secondary_rg.name
+  depends_on = [ azurerm_resource_group.secondary_rg, azurerm_virtual_network.secondary_vnet ]
 }

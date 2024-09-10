@@ -98,11 +98,13 @@ resource "azurerm_public_ip" "secondary_public_ip" {
 module "ssh_primary" {
   source              = "./modules/ssh"
   resource_group_name = azurerm_resource_group.primary_rg.name
+  depends_on          = [azurerm_resource_group.primary_rg]
 }
 
 module "ssh_secondary" {
   source              = "./modules/ssh"
   resource_group_name = azurerm_resource_group.secondary_rg.name
+  depends_on          = [azurerm_resource_group.secondary_rg]
 }
 
 module "primary_controller_linux_vm" {

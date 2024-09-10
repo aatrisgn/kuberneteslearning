@@ -83,8 +83,8 @@ resource "azurerm_virtual_network_peering" "peer_secondary_to_primary" {
 # Create public IPs
 resource "azurerm_public_ip" "primary_public_ip" {
   name                = "pip-ath-aks-${lower(var.environment)}-${lower(var.primary_location)}"
-  location            = azurerm_resource_group.primary_location.location
-  resource_group_name = azurerm_resource_group.primary_location.name
+  location            = azurerm_resource_group.primary_rg.location
+  resource_group_name = azurerm_resource_group.primary_rg.name
   allocation_method   = "Dynamic"
 }
 # Create public IPs
@@ -95,14 +95,20 @@ resource "azurerm_public_ip" "secondary_public_ip" {
   allocation_method   = "Dynamic"
 }
 
-module "ssh" {
+module "ssh_primary" {
   source = "./modules/ssh"
+  resource_group_name = azurerm_resource_group.primary_rg.name
+}
+
+module "ssh_secondary" {
+  source = "./modules/ssh"
+  resource_group_name = azurerm_resource_group.secondary_rg.name
 }
 
 module "primary_controller_linux_vm" {
   source               = "./modules/linux_vm"
   component_name       = "ath-aks"
-  public_ssh_key       = module.ssh.key_data
+  public_ssh_key       = module.ssh_primary.key_data
   virtual_network_name = azurerm_virtual_network.primary_vnet.name
   location             = var.primary_location
   username             = "aatrisgn"
@@ -115,7 +121,7 @@ module "primary_controller_linux_vm" {
 module "secondary_controller_linux_vm" {
   source               = "./modules/linux_vm"
   component_name       = "ath-aks"
-  public_ssh_key       = module.ssh.key_data
+  public_ssh_key       = module.ssh_secondary.key_data
   virtual_network_name = azurerm_virtual_network.primary_vnet.name
   location             = var.primary_location
   username             = "aatrisgn"

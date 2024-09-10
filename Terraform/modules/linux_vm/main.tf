@@ -38,10 +38,10 @@ resource "azurerm_network_interface_security_group_association" "linux_vm_associ
   network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
 }
 
-resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
+resource "azurerm_linux_virtual_machine" "linux_vm" {
   name                  = "vm-${var.component_name}-${var.vm_name}-${lower(var.environment)}-${lower(var.location)}"
-  location              = azurerm_resource_group.rg.location
-  resource_group_name   = azurerm_resource_group.rg.name
+  location              = data.azurerm_resource_group.existing_resource_group.location
+  resource_group_name   = data.azurerm_resource_group.existing_resource_group.name
   network_interface_ids = [azurerm_network_interface.linux_vm_nic.id]
   size                  = "Standard_B2pls_v2"
 

@@ -39,12 +39,12 @@ resource "azurerm_virtual_network" "primary_vnet" {
 
 
   subnet {
-    name             = "controller"
+    name             = local.controller_subnet_name
     address_prefixes = ["10.10.1.0/24"]
   }
 
   subnet {
-    name             = "worker"
+    name             = local.worker_subnet_name
     address_prefixes = ["10.10.2.0/24"]
   }
 }
@@ -56,12 +56,12 @@ resource "azurerm_virtual_network" "secondary_vnet" {
   address_space       = ["10.11.0.0/16"]
 
   subnet {
-    name             = "controller"
+    name             = local.controller_subnet_name
     address_prefixes = ["10.11.1.0/24"]
   }
 
   subnet {
-    name             = "worker"
+    name             = local.worker_subnet_name
     address_prefixes = ["10.11.2.0/24"]
   }
 }
@@ -93,4 +93,34 @@ resource "azurerm_public_ip" "secondary_public_ip" {
   location            = azurerm_resource_group.secondary_rg.location
   resource_group_name = azurerm_resource_group.secondary_rg.name
   allocation_method   = "Dynamic"
+}
+
+module "ssh" {
+    source = "./modules/ssh"
+}
+
+module "primary_controller_linux_vm" {
+    source = "./modules/linux_vm"
+    component_name = "ath-aks"
+    public_ssh_key = module.ssh.key_data
+    virtual_network_name = azurerm_virtual_network.primary_vnet.name
+    location = var.primary_location
+    username = "aatrisgn"
+    environment = var.environment
+    vm_name = "01"
+    subnet_name = local.controller_subnet_name
+    resource_group_name = azurerm_resource_group.primary_rg.name
+}
+
+module "secondary_controller_linux_vm" {
+    source = "./modules/linux_vm"
+    component_name = "ath-aks"
+    public_ssh_key = module.ssh.key_data
+    virtual_network_name = azurerm_virtual_network.primary_vnet.name
+    location = var.primary_location
+    username = "aatrisgn"
+    environment = var.environment
+    vm_name = "01"
+    subnet_name = local.controller_subnet_name
+    resource_group_name = azurerm_resource_group.primary_rg.name
 }

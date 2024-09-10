@@ -19,18 +19,37 @@ variable resource_group_name {
     type = string
 }
 
-variable subnet_id {
-    description = "ID of the subnet to associate the VM"
+variable subnet_name {
+    description = "Name of the subnet to associate the VM"
+    type = string
+}
+
+variable virtual_network_name {
+    description = "Name of the virtual network to associate the VM"
+    type = string
+}
+
+variable vm_name {
+    description = "Name of the virtual machines"
     type = string
 }
 
 variable "component_name" {
   type = string
-  nullable = false
+}
+
+variable "username" {
+  type = string
+}
+
+variable "public_ssh_key" {
+  type = string
 }
 
 #Optional
 variable public_ip_id {
     description = "(Optional) public IP address to associate"
     type = string
+    default = null
+    nullable = true
 }

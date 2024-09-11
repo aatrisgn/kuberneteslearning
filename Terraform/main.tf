@@ -147,7 +147,7 @@ module "secondary_controller_linux_vm" {
   component_name       = "ath-aks"
   public_ssh_key       = tls_private_key.ssh_secondary.public_key_openssh
   virtual_network_name = azurerm_virtual_network.secondary_vnet.name
-  location             = var.primary_location
+  location             = var.secondary_location
   username             = "aatrisgn"
   environment          = var.environment
   vm_name              = "01"

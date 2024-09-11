@@ -43,7 +43,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   location              = data.azurerm_resource_group.existing_resource_group.location
   resource_group_name   = data.azurerm_resource_group.existing_resource_group.name
   network_interface_ids = [azurerm_network_interface.linux_vm_nic.id]
-  size                  = "Standard_B2pls_v2"
+  size                  = "Standard_B2als_v2"
 
   os_disk {
     name                 = "myOsDisk"
@@ -54,7 +54,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
+    sku       = "24_04-lts-gen2"
     version   = "latest"
   }
 

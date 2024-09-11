@@ -118,7 +118,7 @@ resource "azurerm_key_vault" "key_vault" {
 module "primary_ssh_key" {
   source = "./modules/sshkey"
 
-  secret_key_name     = "primary_ssh_key"
+  secret_key_name     = "primarysshkey"
   resource_group_name = azurerm_resource_group.primary_rg.name
   keyvault_name       = azurerm_key_vault.key_vault.name
 
@@ -128,7 +128,7 @@ module "primary_ssh_key" {
 module "secondary_ssh_key" {
   source = "./modules/sshkey"
 
-  secret_key_name     = "secondary_ssh_key"
+  secret_key_name     = "secondarysshkey"
   resource_group_name = azurerm_resource_group.primary_rg.name
   keyvault_name       = azurerm_key_vault.key_vault.name
 

@@ -147,6 +147,7 @@ module "primary_controller_linux_vm" {
   vm_name              = "01"
   subnet_name          = local.controller_subnet_name
   resource_group_name  = azurerm_resource_group.primary_rg.name
+  public_ip_id         = azurerm_public_ip.primary_public_ip.id
   depends_on           = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
 }
 
@@ -161,5 +162,6 @@ module "secondary_controller_linux_vm" {
   vm_name              = "01"
   subnet_name          = local.controller_subnet_name
   resource_group_name  = azurerm_resource_group.secondary_rg.name
+  public_ip_id         = azurerm_public_ip.secondary_public_ip.id
   depends_on           = [azurerm_resource_group.secondary_rg, azurerm_virtual_network.secondary_vnet, azurerm_subnet.secondary_controller_subnet]
 }

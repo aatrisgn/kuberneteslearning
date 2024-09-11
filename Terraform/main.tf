@@ -39,7 +39,7 @@ resource "azurerm_virtual_network" "primary_vnet" {
 }
 
 # Create subnet
-resource "azurerm_subnet" "my_terraform_subnet" {
+resource "azurerm_subnet" "primary_controller_subnet" {
   name                 = local.controller_subnet_name
   resource_group_name  = azurerm_resource_group.primary_rg.name
   virtual_network_name = azurerm_virtual_network.primary_vnet.name
@@ -47,7 +47,7 @@ resource "azurerm_subnet" "my_terraform_subnet" {
 }
 
 # Create subnet
-resource "azurerm_subnet" "my_terraform_subnet" {
+resource "azurerm_subnet" "primary_worker_subnet" {
   name                 = local.worker_subnet_name
   resource_group_name  = azurerm_resource_group.primary_rg.name
   virtual_network_name = azurerm_virtual_network.primary_vnet.name

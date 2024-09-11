@@ -110,7 +110,7 @@ resource "azurerm_public_ip" "secondary_public_ip" {
 resource "azurerm_key_vault" "key_vault" {
   resource_group_name = azurerm_resource_group.primary_rg.name
   location            = azurerm_resource_group.primary_rg.location
-  name                = "kv-ath-aks-${lower(var.environment)}-${lower(var.secondary_location)}"
+  name                = "kvathaksdevwe"
   sku_name            = "standard"
   tenant_id           = data.azurerm_client_config.current.tenant_id
 }

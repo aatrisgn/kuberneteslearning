@@ -20,7 +20,7 @@ resource "azurerm_network_security_group" "linux_vm_nsg" {
 
 # Create network interface
 resource "azurerm_network_interface" "linux_vm_nic" {
-  name                = "nic-${lower(var.component_name)}-${lower(var.environment)}-${lower(var.location)}"
+  name                = "nic-${lower(var.component_name)}-${lower(var.vm_name)}-${lower(var.environment)}-${lower(var.location)}"
   location            = data.azurerm_resource_group.existing_resource_group.location
   resource_group_name = data.azurerm_resource_group.existing_resource_group.name
 

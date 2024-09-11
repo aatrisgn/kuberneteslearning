@@ -36,17 +36,22 @@ resource "azurerm_virtual_network" "primary_vnet" {
   location            = azurerm_resource_group.primary_rg.location
   resource_group_name = azurerm_resource_group.primary_rg.name
   address_space       = ["10.10.0.0/16"]
+}
 
+# Create subnet
+resource "azurerm_subnet" "my_terraform_subnet" {
+  name                 = local.controller_subnet_name
+  resource_group_name  = azurerm_resource_group.primary_rg.name
+  virtual_network_name = azurerm_virtual_network.primary_vnet.name
+  address_prefixes     = ["10.10.1.0/24"]
+}
 
-  subnet {
-    name             = local.controller_subnet_name
-    address_prefixes = ["10.10.1.0/24"]
-  }
-
-  subnet {
-    name             = local.worker_subnet_name
-    address_prefixes = ["10.10.2.0/24"]
-  }
+# Create subnet
+resource "azurerm_subnet" "my_terraform_subnet" {
+  name                 = local.worker_subnet_name
+  resource_group_name  = azurerm_resource_group.primary_rg.name
+  virtual_network_name = azurerm_virtual_network.primary_vnet.name
+  address_prefixes     = ["10.10.2.0/24"]
 }
 
 resource "azurerm_virtual_network" "secondary_vnet" {
@@ -117,8 +122,6 @@ resource "tls_private_key" "ssh_secondary" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
-
-
 
 module "primary_controller_linux_vm" {
   source               = "./modules/linux_vm"

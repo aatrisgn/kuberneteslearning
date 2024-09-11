@@ -121,6 +121,8 @@ module "primary_ssh_key" {
   secret_key_name     = "primary_ssh_key"
   resource_group_name = azurerm_resource_group.primary_rg.name
   keyvault_name       = azurerm_key_vault.key_vault.name
+
+  depends_on = [azurerm_key_vault.key_vault]
 }
 
 module "secondary_ssh_key" {
@@ -129,6 +131,8 @@ module "secondary_ssh_key" {
   secret_key_name     = "secondary_ssh_key"
   resource_group_name = azurerm_resource_group.primary_rg.name
   keyvault_name       = azurerm_key_vault.key_vault.name
+
+  depends_on = [azurerm_key_vault.key_vault]
 }
 
 module "primary_controller_linux_vm" {

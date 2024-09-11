@@ -21,6 +21,8 @@ provider "azurerm" {
   features {}
 }
 
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_resource_group" "primary_rg" {
   name     = "rg-ath-aks-${lower(var.environment)}-${lower(var.primary_location)}"
   location = var.primary_location
@@ -105,6 +107,14 @@ resource "azurerm_public_ip" "secondary_public_ip" {
   allocation_method   = "Static"
 }
 
+resource "azurerm_key_vault" "key_vault" {
+  resource_group_name = azurerm_resource_group.primary_rg.name
+  location            = azurerm_resource_group.primary_rg.location
+  name                = "kv-ath-aks-${lower(var.environment)}-${lower(var.secondary_location)}"
+  sku_name            = "standard"
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+}
+
 # module "ssh_primary" {
 #   source              = "./modules/ssh"
 #   resource_group_name = azurerm_resource_group.primary_rg.name
@@ -117,21 +127,26 @@ resource "azurerm_public_ip" "secondary_public_ip" {
 #   depends_on          = [azurerm_resource_group.secondary_rg]
 # }
 
-resource "tls_private_key" "ssh_primary" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
+module "primary_ssh_key" {
+  source = "./modules/sshkey"
+
+  secret_key_name     = "primary_ssh_key"
+  resource_group_name = azurerm_resource_group.primary_rg.name
+  keyvault_name       = azurerm_key_vault.key_vault.name
 }
 
+module "secondary_ssh_key" {
+  source = "./modules/sshkey"
 
-resource "tls_private_key" "ssh_secondary" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
+  secret_key_name     = "secondary_ssh_key"
+  resource_group_name = azurerm_resource_group.primary_rg.name
+  keyvault_name       = azurerm_key_vault.key_vault.name
 }
 
 module "primary_controller_linux_vm" {
   source               = "./modules/linux_vm"
   component_name       = "ath-aks"
-  public_ssh_key       = tls_private_key.ssh_primary.public_key_openssh
+  public_ssh_key       = module.primary_ssh_key.public_key
   virtual_network_name = azurerm_virtual_network.primary_vnet.name
   location             = var.primary_location
   username             = "aatrisgn"
@@ -145,7 +160,7 @@ module "primary_controller_linux_vm" {
 module "secondary_controller_linux_vm" {
   source               = "./modules/linux_vm"
   component_name       = "ath-aks"
-  public_ssh_key       = tls_private_key.ssh_secondary.public_key_openssh
+  public_ssh_key       = module.secondary_ssh_key.public_key
   virtual_network_name = azurerm_virtual_network.secondary_vnet.name
   location             = var.secondary_location
   username             = "aatrisgn"

@@ -46,7 +46,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   size                  = "Standard_B2als_v2"
 
   os_disk {
-    name                 = "myOsDisk"
+    name                 = "osdisk-${var.component_name}-${var.vm_name}-${lower(var.environment)}-${lower(var.location)}"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
@@ -58,7 +58,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     version   = "latest"
   }
 
-  computer_name  = "hostname"
+  computer_name  = "vm-${var.component_name}-${var.vm_name}-${lower(var.environment)}-${lower(var.location)}"
   admin_username = var.username
 
   admin_ssh_key {

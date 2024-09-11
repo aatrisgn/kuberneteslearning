@@ -115,18 +115,6 @@ resource "azurerm_key_vault" "key_vault" {
   tenant_id           = data.azurerm_client_config.current.tenant_id
 }
 
-# module "ssh_primary" {
-#   source              = "./modules/ssh"
-#   resource_group_name = azurerm_resource_group.primary_rg.name
-#   depends_on          = [azurerm_resource_group.primary_rg]
-# }
-
-# module "ssh_secondary" {
-#   source              = "./modules/ssh"
-#   resource_group_name = azurerm_resource_group.secondary_rg.name
-#   depends_on          = [azurerm_resource_group.secondary_rg]
-# }
-
 module "primary_ssh_key" {
   source = "./modules/sshkey"
 

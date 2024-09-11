@@ -108,11 +108,12 @@ resource "azurerm_public_ip" "secondary_public_ip" {
 }
 
 resource "azurerm_key_vault" "key_vault" {
-  resource_group_name = azurerm_resource_group.primary_rg.name
-  location            = azurerm_resource_group.primary_rg.location
-  name                = "kvathaksdevwe"
-  sku_name            = "standard"
-  tenant_id           = data.azurerm_client_config.current.tenant_id
+  resource_group_name       = azurerm_resource_group.primary_rg.name
+  location                  = azurerm_resource_group.primary_rg.location
+  name                      = "kvathaksdevwe"
+  sku_name                  = "standard"
+  tenant_id                 = data.azurerm_client_config.current.tenant_id
+  enable_rbac_authorization = true
 }
 
 module "primary_ssh_key" {

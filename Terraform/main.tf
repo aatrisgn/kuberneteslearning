@@ -108,10 +108,10 @@ resource "azurerm_public_ip" "secondary_public_ip" {
 }
 
 module "ssh_public_key" {
-    source = "./modules/keyvault_secret"
-    keyvault_resource_group = var.sshkey_keyvault_resource_group_name
-    keyvault_name = var.sshkey_keyvault_name
-    secret_name = var.sshkey_secret_name
+  source                  = "./modules/keyvault_secret"
+  keyvault_resource_group = var.sshkey_keyvault_resource_group_name
+  keyvault_name           = var.sshkey_keyvault_name
+  secret_name             = var.sshkey_secret_name
 }
 
 module "primary_controller_linux_vm" {

@@ -93,19 +93,29 @@ resource "azurerm_virtual_network_peering" "peer_secondary_to_primary" {
 }
 
 # Create public IPs
-resource "azurerm_public_ip" "primary_public_ip" {
-  name                = "pip-ath-aks-${lower(var.environment)}-${lower(var.primary_location)}"
+resource "azurerm_public_ip" "primary_controller_public_ip" {
+  name                = "pip-ath-aks-con-01-${lower(var.environment)}-${lower(var.primary_location)}"
   location            = azurerm_resource_group.primary_rg.location
   resource_group_name = azurerm_resource_group.primary_rg.name
   allocation_method   = "Static"
 }
+
 # Create public IPs
-resource "azurerm_public_ip" "secondary_public_ip" {
-  name                = "pip-ath-aks-${lower(var.environment)}-${lower(var.secondary_location)}"
-  location            = azurerm_resource_group.secondary_rg.location
-  resource_group_name = azurerm_resource_group.secondary_rg.name
+resource "azurerm_public_ip" "primary_worker_1_public_ip" {
+  name                = "pip-ath-aks-work-02-${lower(var.environment)}-${lower(var.primary_location)}"
+  location            = azurerm_resource_group.primary_rg.location
+  resource_group_name = azurerm_resource_group.primary_rg.name
   allocation_method   = "Static"
 }
+
+# Create public IPs
+resource "azurerm_public_ip" "primary_worker_2_public_ip" {
+  name                = "pip-ath-aks-work-02-${lower(var.environment)}-${lower(var.primary_location)}"
+  location            = azurerm_resource_group.primary_rg.location
+  resource_group_name = azurerm_resource_group.primary_rg.name
+  allocation_method   = "Static"
+}
+
 
 module "ssh_public_key" {
   source                  = "./modules/keyvault_secret"
@@ -122,14 +132,14 @@ module "primary_controller_linux_vm" {
   location             = var.primary_location
   username             = "aatrisgn"
   environment          = var.environment
-  vm_name              = "01"
+  vm_name              = "con-01"
   subnet_name          = local.controller_subnet_name
   resource_group_name  = azurerm_resource_group.primary_rg.name
-  public_ip_id         = azurerm_public_ip.primary_public_ip.id
+  public_ip_id         = azurerm_public_ip.primary_controller_public_ip.id
   depends_on           = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
 }
 
-module "primary_controller_linux_vm" {
+module "primary_worker_1_linux_vm" {
   source               = "./modules/linux_vm"
   component_name       = "ath-aks"
   public_ssh_key       = module.ssh_public_key.secret_value
@@ -137,14 +147,14 @@ module "primary_controller_linux_vm" {
   location             = var.primary_location
   username             = "aatrisgn"
   environment          = var.environment
-  vm_name              = "02"
-  subnet_name          = local.controller_subnet_name
+  vm_name              = "work-01"
+  subnet_name          = local.worker_subnet_name
   resource_group_name  = azurerm_resource_group.primary_rg.name
-  public_ip_id         = azurerm_public_ip.primary_public_ip.id
+  public_ip_id         = azurerm_public_ip.primary_worker_1_public_ip.id
   depends_on           = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
 }
 
-module "primary_controller_linux_vm" {
+module "primary_worker_2_linux_vm" {
   source               = "./modules/linux_vm"
   component_name       = "ath-aks"
   public_ssh_key       = module.ssh_public_key.secret_value
@@ -152,9 +162,9 @@ module "primary_controller_linux_vm" {
   location             = var.primary_location
   username             = "aatrisgn"
   environment          = var.environment
-  vm_name              = "03"
-  subnet_name          = local.controller_subnet_name
+  vm_name              = "work-02"
+  subnet_name          = local.worker_subnet_name
   resource_group_name  = azurerm_resource_group.primary_rg.name
-  public_ip_id         = azurerm_public_ip.primary_public_ip.id
+  public_ip_id         = azurerm_public_ip.primary_worker_2_public_ip.id
   depends_on           = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
 }

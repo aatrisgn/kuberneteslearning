@@ -1,5 +1,3 @@
 primary_location   = "westeurope"
 secondary_location = "northeurope"
 environment        = "dev"
-sshkey_secret_name = ""
-sshkey_keyvault_name = ""

@@ -15,7 +15,7 @@ resource "azurerm_network_interface" "linux_vm_nic" {
 # Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "linux_vm_association" {
   network_interface_id      = azurerm_network_interface.linux_vm_nic.id
-  network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
+  network_security_group_id = data.azurerm_network_security_group.existing_network_security_group.id
 }
 
 resource "azurerm_linux_virtual_machine" "linux_vm" {

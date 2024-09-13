@@ -102,7 +102,7 @@ resource "azurerm_public_ip" "primary_controller_public_ip" {
 
 # Create public IPs
 resource "azurerm_public_ip" "primary_worker_1_public_ip" {
-  name                = "pip-ath-aks-work-02-${lower(var.environment)}-${lower(var.primary_location)}"
+  name                = "pip-ath-aks-work-01-${lower(var.environment)}-${lower(var.primary_location)}"
   location            = azurerm_resource_group.primary_rg.location
   resource_group_name = azurerm_resource_group.primary_rg.name
   allocation_method   = "Static"

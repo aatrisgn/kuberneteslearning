@@ -50,13 +50,13 @@ jobs:
       id: plan
       run: terraform plan -input=false -var-file="envs/dev/vars.dev.tfvars" -out=tfplan
       env:
-        sshkey_secret_name: "${{ secrets.SECRET_NAME }}"
-        sshkey_keyvault_name: "${{ secrets.KEYVAULT_NAME }}"
-        sshkey_keyvault_resource_group_name: "${{ secrets.KEYVAULT_RESOURCE_GROUP_NAME }}"
+        TF_VAR_sshkey_secret_name: "${{ secrets.SECRET_NAME }}"
+        TF_VAR_sshkey_keyvault_name: "${{ secrets.KEYVAULT_NAME }}"
+        TF_VAR_sshkey_keyvault_resource_group_name: "${{ secrets.KEYVAULT_RESOURCE_GROUP_NAME }}"
 
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
       env:
-        sshkey_secret_name: "${{ secrets.SECRET_NAME }}"
-        sshkey_keyvault_name: "${{ secrets.KEYVAULT_NAME }}"
-        sshkey_keyvault_resource_group_name: "${{ secrets.KEYVAULT_RESOURCE_GROUP_NAME }}"
+        TF_VAR_sshkey_secret_name: "${{ secrets.SECRET_NAME }}"
+        TF_VAR_sshkey_keyvault_name: "${{ secrets.KEYVAULT_NAME }}"
+        TF_VAR_sshkey_keyvault_resource_group_name: "${{ secrets.KEYVAULT_RESOURCE_GROUP_NAME }}"

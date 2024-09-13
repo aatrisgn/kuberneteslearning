@@ -116,6 +116,26 @@ resource "azurerm_public_ip" "primary_worker_2_public_ip" {
   allocation_method   = "Static"
 }
 
+# Create Network Security Group and rule
+
+resource "azurerm_network_security_group" "linux_vm_nsg" {
+  name                = "nsg-ath-aks-${lower(var.environment)}-${lower(var.primary_location)}"
+  location            = var.primary_location
+  resource_group_name = azurerm_resource_group.primary_rg.name
+
+  security_rule {
+    name                       = "SSH"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
 
 module "ssh_public_key" {
   source                  = "./modules/keyvault_secret"
@@ -125,46 +145,49 @@ module "ssh_public_key" {
 }
 
 module "primary_controller_linux_vm" {
-  source               = "./modules/linux_vm"
-  component_name       = "ath-aks"
-  public_ssh_key       = module.ssh_public_key.secret_value
-  virtual_network_name = azurerm_virtual_network.primary_vnet.name
-  location             = var.primary_location
-  username             = "aatrisgn"
-  environment          = var.environment
-  vm_name              = "con-01"
-  subnet_name          = local.controller_subnet_name
-  resource_group_name  = azurerm_resource_group.primary_rg.name
-  public_ip_id         = azurerm_public_ip.primary_controller_public_ip.id
-  depends_on           = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
+  source                      = "./modules/linux_vm"
+  component_name              = "ath-aks"
+  public_ssh_key              = module.ssh_public_key.secret_value
+  virtual_network_name        = azurerm_virtual_network.primary_vnet.name
+  location                    = var.primary_location
+  username                    = "aatrisgn"
+  environment                 = var.environment
+  vm_name                     = "con-01"
+  subnet_name                 = local.controller_subnet_name
+  resource_group_name         = azurerm_resource_group.primary_rg.name
+  public_ip_id                = azurerm_public_ip.primary_controller_public_ip.id
+  network_security_group_name = azurerm_network_security_group.linux_vm_nsg.name
+  depends_on                  = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
 }
 
 module "primary_worker_1_linux_vm" {
-  source               = "./modules/linux_vm"
-  component_name       = "ath-aks"
-  public_ssh_key       = module.ssh_public_key.secret_value
-  virtual_network_name = azurerm_virtual_network.primary_vnet.name
-  location             = var.primary_location
-  username             = "aatrisgn"
-  environment          = var.environment
-  vm_name              = "work-01"
-  subnet_name          = local.worker_subnet_name
-  resource_group_name  = azurerm_resource_group.primary_rg.name
-  public_ip_id         = azurerm_public_ip.primary_worker_1_public_ip.id
-  depends_on           = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
+  source                      = "./modules/linux_vm"
+  component_name              = "ath-aks"
+  public_ssh_key              = module.ssh_public_key.secret_value
+  virtual_network_name        = azurerm_virtual_network.primary_vnet.name
+  location                    = var.primary_location
+  username                    = "aatrisgn"
+  environment                 = var.environment
+  vm_name                     = "work-01"
+  subnet_name                 = local.worker_subnet_name
+  resource_group_name         = azurerm_resource_group.primary_rg.name
+  public_ip_id                = azurerm_public_ip.primary_worker_1_public_ip.id
+  network_security_group_name = azurerm_network_security_group.linux_vm_nsg.name
+  depends_on                  = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
 }
 
 module "primary_worker_2_linux_vm" {
-  source               = "./modules/linux_vm"
-  component_name       = "ath-aks"
-  public_ssh_key       = module.ssh_public_key.secret_value
-  virtual_network_name = azurerm_virtual_network.primary_vnet.name
-  location             = var.primary_location
-  username             = "aatrisgn"
-  environment          = var.environment
-  vm_name              = "work-02"
-  subnet_name          = local.worker_subnet_name
-  resource_group_name  = azurerm_resource_group.primary_rg.name
-  public_ip_id         = azurerm_public_ip.primary_worker_2_public_ip.id
-  depends_on           = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
+  source                      = "./modules/linux_vm"
+  component_name              = "ath-aks"
+  public_ssh_key              = module.ssh_public_key.secret_value
+  virtual_network_name        = azurerm_virtual_network.primary_vnet.name
+  location                    = var.primary_location
+  username                    = "aatrisgn"
+  environment                 = var.environment
+  vm_name                     = "work-02"
+  subnet_name                 = local.worker_subnet_name
+  resource_group_name         = azurerm_resource_group.primary_rg.name
+  public_ip_id                = azurerm_public_ip.primary_worker_2_public_ip.id
+  network_security_group_name = azurerm_network_security_group.linux_vm_nsg.name
+  depends_on                  = [azurerm_resource_group.primary_rg, azurerm_virtual_network.primary_vnet, azurerm_subnet.primary_controller_subnet]
 }

@@ -1,23 +1,3 @@
-# Create Network Security Group and rule
-
-resource "azurerm_network_security_group" "linux_vm_nsg" {
-  name                = "nsg-${lower(var.component_name)}-${lower(var.environment)}-${lower(var.location)}"
-  location            = var.location
-  resource_group_name = data.azurerm_resource_group.existing_resource_group.name
-
-  security_rule {
-    name                       = "SSH"
-    priority                   = 1001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-}
-
 # Create network interface
 resource "azurerm_network_interface" "linux_vm_nic" {
   name                = "nic-${lower(var.component_name)}-${lower(var.vm_name)}-${lower(var.environment)}-${lower(var.location)}"
@@ -46,7 +26,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   size                  = "Standard_B2als_v2"
 
   os_disk {
-    name                 = "osdisk-${var.component_name}-${var.vm_name}-${lower(var.environment)}-${lower(var.location)}"
+    name                 = "vm-${var.component_name}-${var.vm_name}-${lower(var.environment)}-${lower(var.location)}"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }

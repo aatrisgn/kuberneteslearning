@@ -38,3 +38,24 @@ variable "environment" {
     error_message = "Only DEV, TST, STA and PRD is allowed values."
   }
 }
+
+variable "sshkey_secret_name" {
+  description = "Environment name"
+  type        = string
+  nullable    = false
+  sensitive   = true
+}
+
+variable "sshkey_keyvault_name" {
+  description = "Environment name"
+  type        = string
+  nullable    = false
+  sensitive   = true
+}
+
+variable "sshkey_keyvault_resource_group_name" {
+  description = "Environment name"
+  type        = string
+  nullable    = false
+  sensitive   = true
+}

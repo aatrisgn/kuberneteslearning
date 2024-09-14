@@ -90,12 +90,12 @@ resource "azurerm_subnet" "secondary_worker_subnet" {
 
 resource "azurerm_subnet_network_security_group_association" "nsg_secondary_vnet_controller_subnet" {
   subnet_id                 = azurerm_subnet.secondary_controller_subnet.id
-  network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
+  network_security_group_id = azurerm_network_security_group.secondary_linux_vm_nsg.id
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg_secondary_vnet_worker_subnet" {
   subnet_id                 = azurerm_subnet.secondary_worker_subnet.id
-  network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
+  network_security_group_id = azurerm_network_security_group.secondary_linux_vm_nsg.id
 }
 
 resource "azurerm_virtual_network_peering" "peer_primary_to_secondary" {
@@ -143,6 +143,48 @@ resource "azurerm_network_security_group" "linux_vm_nsg" {
   name                = "nsg-ath-aks-${lower(var.environment)}-${lower(var.primary_location)}"
   location            = var.primary_location
   resource_group_name = azurerm_resource_group.primary_rg.name
+
+  security_rule {
+    name                       = "SSH"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "HTTP"
+    priority                   = 1100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "HTTPS"
+    priority                   = 1200
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_network_security_group" "secondary_linux_vm_nsg" {
+  name                = "nsg-ath-aks-${lower(var.environment)}-${lower(var.secondary_location)}"
+  location            = var.secondary_location
+  resource_group_name = azurerm_resource_group.secondary_rg.name
 
   security_rule {
     name                       = "SSH"

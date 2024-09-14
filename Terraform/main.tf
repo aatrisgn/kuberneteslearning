@@ -135,8 +135,9 @@ resource "azurerm_network_security_group" "linux_vm_nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
   security_rule {
-    name                       = "SSH"
+    name                       = "HTTP"
     priority                   = 1100
     direction                  = "Inbound"
     access                     = "Allow"
@@ -146,8 +147,9 @@ resource "azurerm_network_security_group" "linux_vm_nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
   security_rule {
-    name                       = "SSH"
+    name                       = "HTTPS"
     priority                   = 1200
     direction                  = "Inbound"
     access                     = "Allow"

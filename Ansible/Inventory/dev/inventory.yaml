@@ -1,0 +1,12 @@
+#TODO: Should ideally be builded via azure_rm plugin to retrieve hosts
+controllers:
+  hosts:
+    primary_controller:
+      ansible_host: 13.81.101.9
+
+workers:
+  hosts:
+    worker_1:
+      ansible_host: 13.95.94.5
+    worker_2:
+      ansible_host: 13.95.94.28

@@ -73,6 +73,12 @@
         name: kubeadm
         state: present
     
+    - name: Install kubelet
+      ansible.builtin.apt:
+        update_cache: true
+        name: kubelet
+        state: present
+    
     - name: Install kubectl
       ansible.builtin.apt:
         update_cache: true
@@ -85,6 +91,14 @@
         name: kubernetes-cni
         state: present
     
+    - name: enable kubelet
+      ansible.builtin.command: systemctl enable --now kubelet
+      become: true
+    
     - name: Init kubernetes controller
       ansible.builtin.command: kubeadm init
       become: true
+
+    - name: Get kubeadm join command
+      ansible.builtin.command: kubeadm token create --print-join-command
+      

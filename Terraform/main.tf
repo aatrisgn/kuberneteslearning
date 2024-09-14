@@ -56,6 +56,16 @@ resource "azurerm_subnet" "primary_worker_subnet" {
   address_prefixes     = ["10.10.2.0/24"]
 }
 
+resource "azurerm_subnet_network_security_group_association" "example" {
+  subnet_id                 = azurerm_subnet.primary_controller_subnet.id
+  network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "example" {
+  subnet_id                 = azurerm_subnet.primary_worker_subnet.id
+  network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
+}
+
 resource "azurerm_virtual_network" "secondary_vnet" {
   name                = "vnet-ath-aks-${lower(var.environment)}-${lower(var.primary_location)}"
   location            = azurerm_resource_group.secondary_rg.location
@@ -76,6 +86,16 @@ resource "azurerm_subnet" "secondary_worker_subnet" {
   resource_group_name  = azurerm_resource_group.secondary_rg.name
   virtual_network_name = azurerm_virtual_network.secondary_vnet.name
   address_prefixes     = ["10.11.2.0/24"]
+}
+
+resource "azurerm_subnet_network_security_group_association" "example" {
+  subnet_id                 = azurerm_subnet.secondary_controller_subnet.id
+  network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "example" {
+  subnet_id                 = azurerm_subnet.secondary_worker_subnet.id
+  network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
 }
 
 resource "azurerm_virtual_network_peering" "peer_primary_to_secondary" {

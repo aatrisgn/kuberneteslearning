@@ -56,12 +56,12 @@ resource "azurerm_subnet" "primary_worker_subnet" {
   address_prefixes     = ["10.10.2.0/24"]
 }
 
-resource "azurerm_subnet_network_security_group_association" "example" {
+resource "azurerm_subnet_network_security_group_association" "nsg_primary_vnet_controller_subnet" {
   subnet_id                 = azurerm_subnet.primary_controller_subnet.id
   network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
 }
 
-resource "azurerm_subnet_network_security_group_association" "example" {
+resource "azurerm_subnet_network_security_group_association" "nsg_primary_vnet_worker_subnet" {
   subnet_id                 = azurerm_subnet.primary_worker_subnet.id
   network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
 }
@@ -88,12 +88,12 @@ resource "azurerm_subnet" "secondary_worker_subnet" {
   address_prefixes     = ["10.11.2.0/24"]
 }
 
-resource "azurerm_subnet_network_security_group_association" "example" {
+resource "azurerm_subnet_network_security_group_association" "nsg_secondary_vnet_controller_subnet" {
   subnet_id                 = azurerm_subnet.secondary_controller_subnet.id
   network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
 }
 
-resource "azurerm_subnet_network_security_group_association" "example" {
+resource "azurerm_subnet_network_security_group_association" "nsg_secondary_vnet_worker_subnet" {
   subnet_id                 = azurerm_subnet.secondary_worker_subnet.id
   network_security_group_id = azurerm_network_security_group.linux_vm_nsg.id
 }

@@ -92,6 +92,7 @@ resource "azurerm_virtual_network_peering" "peer_secondary_to_primary" {
   remote_virtual_network_id = azurerm_virtual_network.primary_vnet.id
 }
 
+# TODO: Move into Linux_VM module making public ip an optional flag
 # Create public IPs
 resource "azurerm_public_ip" "primary_controller_public_ip" {
   name                = "pip-ath-aks-con-01-${lower(var.environment)}-${lower(var.primary_location)}"
@@ -131,6 +132,28 @@ resource "azurerm_network_security_group" "linux_vm_nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "SSH"
+    priority                   = 1100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "SSH"
+    priority                   = 1200
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }

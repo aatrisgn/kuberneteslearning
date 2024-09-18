@@ -1,0 +1,9 @@
+- name: Install and Configure Nginx
+  hosts: all
+  remote_user: aatrisgn
+  become: true
+  
+  tasks:
+    - name: Run K8 VM configuration
+      include_role:
+        name: k8vm

@@ -1,5 +1,5 @@
 - name: Install and Configure Nginx
-  hosts: controllers
+  hosts: all
   remote_user: aatrisgn
   become: true
   pre_tasks:
@@ -94,21 +94,3 @@
     - name: enable kubelet
       ansible.builtin.command: systemctl enable --now kubelet
       become: true
-
-    - name: Get kubeadm join command
-      ansible.builtin.command: kubeadm token create --print-join-command
-      register: join_command
-      ignore_errors: true
-
-
-    - name: Initialize block
-      block:
-      - name: Init kubernetes controller
-        ansible.builtin.command: kubeadm init
-        become: true
-
-      - name: Get kubeadm join command
-        ansible.builtin.command: kubeadm token create --print-join-command
-        become: true
-      
-      when: join_command is failed

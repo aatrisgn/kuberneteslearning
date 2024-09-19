@@ -1,4 +1,4 @@
-name: Deploy cluster
+name: Remove cluster
 
 on:
   workflow_dispatch:

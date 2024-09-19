@@ -1,9 +1,96 @@
 - name: Install and Configure Nginx
-  hosts: all
+  hosts: workers
   remote_user: aatrisgn
   become: true
-  
+  pre_tasks:
+    - name: Set SSH user for Ubuntu
+      ansible.builtin.set_fact:
+        ansible_user: aatrisgn #Should ideally be retrieved via input from TF outputs
+
   tasks:
-    - name: Run K8 VM configuration
-      include_role:
-        name: k8vm
+    - name: Ping the host
+      ansible.builtin.ping:
+
+    - name: Run command hello world
+      ansible.builtin.command: echo "Hello, world"
+
+    - name: disable swap
+      ansible.builtin.command: swapoff -a
+      become: true
+
+    - name: remove swap from fstab
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        state: absent
+        regexp: '^%swap.img'
+
+    - name: Install docker.io
+      ansible.builtin.apt:
+        update_cache: true
+        name: docker.io
+        state: present
+
+    - name: Install apt-transport-https
+      ansible.builtin.apt:
+        update_cache: true
+        name: apt-transport-https
+        state: present
+
+    - name: Install ca-certificates
+      ansible.builtin.apt:
+        update_cache: true
+        name: ca-certificates
+        state: present
+
+    - name: Install curl
+      ansible.builtin.apt:
+        update_cache: true
+        name: curl
+        state: present
+
+    - name: Install gpg
+      ansible.builtin.apt:
+        update_cache: true
+        name: gpg
+        state: present
+
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+      become: true
+
+    - name: download signing key
+      ansible.builtin.shell: curl -fsSL "https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key" -f | sudo gpg --dearmor -o "/etc/apt/keyrings/kubernetes-apt-keyring.gpg" --yes
+
+    - name: add repository
+      ansible.builtin.shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+    - name: Install kubeadm
+      ansible.builtin.apt:
+        update_cache: true
+        name: kubeadm
+        state: present
+    
+    - name: Install kubelet
+      ansible.builtin.apt:
+        update_cache: true
+        name: kubelet
+        state: present
+    
+    - name: Install kubectl
+      ansible.builtin.apt:
+        update_cache: true
+        name: kubectl
+        state: present
+
+    - name: Install kubernetes-cni
+      ansible.builtin.apt:
+        update_cache: true
+        name: kubernetes-cni
+        state: present
+    
+    - name: enable kubelet
+      ansible.builtin.command: systemctl enable --now kubelet
+      become: true
